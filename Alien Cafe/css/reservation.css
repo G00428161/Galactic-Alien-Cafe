@@ -1,0 +1,118 @@
+/* css/reservation.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/Alien.gif') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* NAVBAR */
+nav {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    box-shadow: 0 0 15px #00ffcc;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    color: #00ffcc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ff00ff;
+}
+
+/* MAIN CONTAINER */
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(26, 26, 51, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc;
+}
+
+/* FORM ELEMENTS */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="number"],
+input[type="date"],
+input[type="time"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+button {
+    background-color: #ff00ff;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00ffcc;
+    color: #000;
+}
+
+/* MESSAGES */
+.message {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.success {
+    background: rgba(0, 255, 200, 0.15);
+    color: #00ffcc;
+    border: 1px solid #00ffcc;
+}
+
+.error {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+}

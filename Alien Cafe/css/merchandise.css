@@ -1,0 +1,144 @@
+/* css/merchandise.css */
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: url('../images/Twilight.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+/* NAV BAR */
+.nav {
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    box-shadow: 0 0 15px #00ffcc;
+}
+
+.nav a {
+    color: #00ffcc;
+    margin: 0 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.nav a:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff;
+}
+
+/* LAYOUT */
+.main-content {
+    display: flex;
+    max-width: 1200px;
+    margin: 50px auto;
+    gap: 30px;
+}
+
+/* LEFT: MERCH GRID */
+.merch-container {
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.merch-item {
+    background: rgba(20, 20, 50, 0.9);
+    border: 2px solid #00ffcc;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+.merch-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px #ff00ff;
+    border-color: #ff00ff;
+}
+
+/* ✅ FIXED IMAGE STYLING – no zoom, show full image */
+.merch-item img {
+    width: 100%;          /* don’t zoom */
+    height: auto;         /* keep aspect ratio */
+    max-height: 220px;    /* stop very tall images getting huge */
+    object-fit: contain;  /* fit inside card without cropping */
+    display: block;
+    background: #000;     /* black bars if needed */
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.merch-item h3 {
+    margin: 15px 0 5px 0;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.price {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #00ffcc;
+    margin-bottom: 15px;
+}
+
+.add-to-cart-btn {
+    background-color: #ff00ff;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #00ffcc;
+    color: #000;
+}
+
+/* RIGHT: CART */
+.cart-container {
+    flex: 1;
+    background: rgba(10, 10, 30, 0.9);
+    border: 2px solid #00ffcc;
+    border-radius: 15px;
+    padding: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 50px;
+}
+
+.cart-container h2 {
+    text-align: center;
+    color: #ff00ff;
+    margin-bottom: 20px;
+}
+
+.cart-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+
+.cart-container li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #00ffcc;
+    padding-bottom: 5px;
+}
+
+.cart-total {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+    color: #00ffcc;
+}

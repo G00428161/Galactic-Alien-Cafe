@@ -1,0 +1,119 @@
+/* css/menu.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/GalacticGif.gif') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+/* Top Navigation Menu */
+nav {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    box-shadow: 0 0 15px #00ffcc;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    color: #00ffcc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ff4d4d;
+}
+
+.container {
+    background: rgba(26, 26, 51, 0.9);
+    margin: 30px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.menu-item {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.menu-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.add-to-cart-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #45a049;
+}
+
+.remove-btn {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.remove-btn:hover {
+    background-color: #e53935;
+}
+
+/* Inline forms */
+.inline-form {
+    display: inline;
+}
+
+/* Cart styles */
+.cart-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.cart-list li {
+    margin-bottom: 8px;
+}
+
+.cart-total {
+    margin-top: 10px;
+}
