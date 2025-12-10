@@ -1,5 +1,4 @@
-/* css/merchandise.css */
-
+/* Background + base font */
 body {
     font-family: 'Orbitron', sans-serif;
     background: url('../images/Twilight.png') no-repeat center center fixed;
@@ -9,21 +8,21 @@ body {
     color: #fff;
 }
 
-/* NAV BAR */
+/* Top navigation */
 .nav {
     background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
     padding: 15px 0;
     box-shadow: 0 0 15px #00ffcc;
+    gap: 30px;
 }
 
 .nav a {
     color: #00ffcc;
-    margin: 0 25px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     transition: 0.3s;
 }
 
@@ -32,7 +31,7 @@ body {
     text-shadow: 0 0 10px #ff00ff;
 }
 
-/* LAYOUT */
+/* Main layout: merch grid + cart */
 .main-content {
     display: flex;
     max-width: 1200px;
@@ -40,7 +39,7 @@ body {
     gap: 30px;
 }
 
-/* LEFT: MERCH GRID */
+/* MERCH GRID */
 .merch-container {
     flex: 3;
     display: grid;
@@ -48,6 +47,7 @@ body {
     gap: 25px;
 }
 
+/* Individual merch card */
 .merch-item {
     background: rgba(20, 20, 50, 0.9);
     border: 2px solid #00ffcc;
@@ -64,18 +64,15 @@ body {
     border-color: #ff00ff;
 }
 
-/* ✅ FIXED IMAGE STYLING – no zoom, show full image */
+/* Image */
 .merch-item img {
-    width: 100%;          /* don’t zoom */
-    height: auto;         /* keep aspect ratio */
-    max-height: 220px;    /* stop very tall images getting huge */
-    object-fit: contain;  /* fit inside card without cropping */
-    display: block;
-    background: #000;     /* black bars if needed */
-    padding: 6px;
-    box-sizing: border-box;
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: #000;
 }
 
+/* Text */
 .merch-item h3 {
     margin: 15px 0 5px 0;
     color: #ffffff;
@@ -89,6 +86,28 @@ body {
     margin-bottom: 15px;
 }
 
+/* SIZE SELECT */
+.size-label {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+.size-select {
+    width: 90%;
+    padding: 8px;
+    margin: 6px auto 12px auto;
+    border-radius: 8px;
+    border: none;
+    background: #0c0c1a;
+    color: #00ffcc;
+    outline: none;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Add to cart button */
 .add-to-cart-btn {
     background-color: #ff00ff;
     border: none;
@@ -106,28 +125,29 @@ body {
     color: #000;
 }
 
-/* RIGHT: CART */
+/* CART SIDEBAR */
 .cart-container {
     flex: 1;
-    background: rgba(10, 10, 30, 0.9);
+    background: rgba(10,10,30,0.9);
     border: 2px solid #00ffcc;
     border-radius: 15px;
     padding: 20px;
     height: fit-content;
     position: sticky;
     top: 50px;
+    box-shadow: 0 0 20px #00ffcc;
 }
 
 .cart-container h2 {
     text-align: center;
     color: #ff00ff;
-    margin-bottom: 20px;
+    margin-top: 0;
 }
 
 .cart-container ul {
     list-style: none;
     padding: 0;
-    margin: 0 0 10px 0;
+    margin: 0;
 }
 
 .cart-container li {
@@ -136,9 +156,32 @@ body {
     padding-bottom: 5px;
 }
 
+/* Neon remove button */
+.remove-btn {
+    background-color: #ff004c;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: 0.3s;
+    font-size: 0.8rem;
+}
+
+.remove-btn:hover {
+    background-color: #00ffcc;
+    color: #000;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+/* Cart total line */
 .cart-total {
-    margin-top: 15px;
+    margin-top: 10px;
     font-weight: bold;
     text-align: center;
     color: #00ffcc;
+    border-top: 1px solid #00ffcc;
+    padding-top: 8px;
 }

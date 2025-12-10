@@ -8,96 +8,194 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Initialize cart if not set
+// Initialise cart
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Handle Add to Cart on this page
+// Handle Add to Cart
 if (isset($_POST['add_to_cart'])) {
     $item_name  = $_POST['item_name'];
-    $item_price = $_POST['item_price'];
+    $item_price = (float)$_POST['item_price'];
+    $item_size  = $_POST['item_size'] ?? null; // clothing only
 
     $_SESSION['cart'][] = [
         'name'  => $item_name,
-        'price' => (float)$item_price
+        'price' => $item_price,
+        'size'  => $item_size,
+        'type'  => 'merch'   // mark as merchandise item
     ];
 
-    // Stay on the same page after adding
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
-// Fetch merchandise from database (Req 1)
-// Make sure your table/column names match these
-$sql = "SELECT merch_id, name, price, image_url 
-        FROM Merchandise 
+// Handle Remove from Cart (remove ONE unit)
+if (isset($_POST['remove_from_cart'])) {
+    $index = (int)$_POST['cart_index'];
+
+    if (isset($_SESSION['cart'][$index]) &&
+        isset($_SESSION['cart'][$index]['type']) &&
+        $_SESSION['cart'][$index]['type'] === 'merch') {
+
+        unset($_SESSION['cart'][$index]);
+        $_SESSION['cart'] = array_values($_SESSION['cart']);
+    }
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Fetch merchandise items
+$sql = "SELECT merch_id, name, price, image_url, availability 
+        FROM Merchandise
         WHERE availability = 'available'";
 $result = $conn->query($sql);
+
+// Items that require SIZE selection
+$size_items = [
+    "Alien Suit",
+    "Alien Shirt",
+    "Female Alien Night Gown"
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Alien Cafe Merchandise</title>
-
-    <!-- Favicon (Req 9) -->
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-
-    <!-- External CSS (Req 10) -->
+    <title>Alien Café Merchandise</title>
     <link rel="stylesheet" href="css/merchandise.css">
 </head>
 <body>
+
 <div class="nav">
     <a href="home.php">Home</a>
     <a href="menu.php">Main Menu</a>
     <a href="merchandise.php">Merchandise</a>
     <a href="payment.php">Payment</a>
     <a href="reservation.php">Reservation</a>
+    <a href="reviews.php">Reviews</a>
     <a href="logout.php">Logout</a>
 </div>
 
 <div class="main-content">
+
+    <!-- LEFT SIDE: MERCH ITEMS -->
     <div class="merch-container">
+
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="merch-item">
                     <img src="images/<?php echo htmlspecialchars($row['image_url']); ?>"
                          alt="<?php echo htmlspecialchars($row['name']); ?>">
+
                     <h3><?php echo htmlspecialchars($row['name']); ?></h3>
                     <p class="price">€<?php echo number_format($row['price'], 2); ?></p>
+
                     <form method="POST" action="">
-                        <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($row['name']); ?>">
-                        <input type="hidden" name="item_price" value="<?php echo htmlspecialchars($row['price']); ?>">
-                        <button type="submit" name="add_to_cart" class="add-to-cart-btn">Add to Cart</button>
+                        <input type="hidden" name="item_name"
+                               value="<?php echo htmlspecialchars($row['name']); ?>">
+                        <input type="hidden" name="item_price"
+                               value="<?php echo htmlspecialchars($row['price']); ?>">
+
+                        <?php if (in_array($row['name'], $size_items)): ?>
+                            <label class="size-label">Size:</label>
+                            <select name="item_size" required class="size-select">
+                                <option value="" disabled selected>Select Size</option>
+                                <option value="S">Small (S)</option>
+                                <option value="M">Medium (M)</option>
+                                <option value="L">Large (L)</option>
+                                <option value="XL">Extra Large (XL)</option>
+                            </select>
+                        <?php endif; ?>
+
+                        <button type="submit" name="add_to_cart" class="add-to-cart-btn">
+                            Add to Cart
+                        </button>
                     </form>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
-            <p>No merchandise available at the moment.</p>
+            <p>No merchandise available.</p>
         <?php endif; ?>
+
     </div>
 
+    <!-- RIGHT SIDE: CART -->
     <div class="cart-container">
         <h2>Your Cart</h2>
-        <?php if (!empty($_SESSION['cart'])): ?>
-            <ul>
-                <?php 
-                $total = 0;
-                foreach ($_SESSION['cart'] as $cart_item):
-                    $total += $cart_item['price'];
-                ?>
-                    <li>
-                        <?php echo htmlspecialchars($cart_item['name']); ?>
-                        - €<?php echo number_format($cart_item['price'], 2); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-            <div class="cart-total">Total: €<?php echo number_format($total, 2); ?></div>
-        <?php else: ?>
-            <p>Your cart is empty.</p>
-        <?php endif; ?>
+
+        <ul>
+        <?php
+            $grouped = [];
+            $total = 0;
+
+            foreach ($_SESSION['cart'] as $index => $item) {
+
+                // Only merch items in this cart
+                if (!isset($item['type']) || $item['type'] !== 'merch') {
+                    continue;
+                }
+
+                $name = $item['name'] ?? 'Unknown Item';
+                $size = $item['size'] ?? '';
+
+                // Key per name + size combo
+                $key = $name . '|' . $size;
+
+                if (!isset($grouped[$key])) {
+                    $grouped[$key] = [
+                        'name'     => $name,
+                        'price'    => $item['price'] ?? 0,
+                        'size'     => $size,
+                        'quantity' => 1,
+                        'indexes'  => [$index]
+                    ];
+                } else {
+                    $grouped[$key]['quantity']++;
+                    $grouped[$key]['indexes'][] = $index;
+                }
+            }
+
+            if (!empty($grouped)):
+                foreach ($grouped as $data):
+
+                    $line_total = $data['quantity'] * $data['price'];
+                    $total += $line_total;
+        ?>
+                <li>
+                    <?php echo htmlspecialchars($data['name']); ?>
+
+                    <?php if (!empty($data['size'])): ?>
+                        (Size: <?php echo htmlspecialchars($data['size']); ?>)
+                    <?php endif; ?>
+
+                    <?php if ($data['quantity'] > 1): ?>
+                        (x<?php echo $data['quantity']; ?>)
+                    <?php endif; ?>
+
+                    – €<?php echo number_format($line_total, 2); ?>
+
+                    <form method="POST" style="display:inline;">
+                        <!-- remove ONE unit at a time (first index) -->
+                        <input type="hidden" name="cart_index"
+                               value="<?php echo $data['indexes'][0]; ?>">
+                        <button type="submit" name="remove_from_cart" class="remove-btn">
+                            Remove
+                        </button>
+                    </form>
+                </li>
+        <?php
+                endforeach;
+                echo "<li class='cart-total'>Total: €" . number_format($total, 2) . "</li>";
+            else:
+                echo "<li>Your cart is empty.</li>";
+            endif;
+        ?>
+        </ul>
     </div>
+
 </div>
+
 </body>
 </html>

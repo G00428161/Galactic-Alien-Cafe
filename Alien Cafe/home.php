@@ -12,8 +12,11 @@
     <a href="home.php">Home</a>
     <a href="menu.php">Menu</a>
     <a href="merchandise.php">Merchandise</a>
-    <a href="reservation.php">Reservations</a>
     <a href="payment.php">Payment</a>
+    <a href="reservation.php">Reservations</a>
+    <a href="reviews.php">Reviews</a>
+    <a href="logout.php">Logout</a>
+  
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <a class="nav-right" href="logout.php">Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>

@@ -2,118 +2,172 @@
 session_start();
 include 'db_connect.php';
 
-// Check if user is logged in
+// Require login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Initialize the cart if it's not set
+// Initialise cart if needed
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Add to cart logic (using name + price only)
+// ADD TO CART (MENU ITEMS)
 if (isset($_POST['add_to_cart'])) {
+    $item_id    = $_POST['item_id'];
     $item_name  = $_POST['item_name'];
     $item_price = (float)$_POST['item_price'];
 
     $_SESSION['cart'][] = [
+        'id'    => $item_id,
         'name'  => $item_name,
-        'price' => $item_price
+        'price' => $item_price,
+        'type'  => 'menu' // important tag
     ];
 
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
-// Remove from cart logic (match by name)
+// REMOVE FROM CART (ONE UNIT)
 if (isset($_POST['remove_from_cart'])) {
-    $item_name_to_remove = $_POST['item_name_to_remove'];
-    foreach ($_SESSION['cart'] as $index => $item) {
-        if ($item['name'] === $item_name_to_remove) {
-            unset($_SESSION['cart'][$index]);
-            $_SESSION['cart'] = array_values($_SESSION['cart']); // re-index
-            break;
-        }
+    $cart_index = (int)$_POST['cart_index'];
+
+    if (isset($_SESSION['cart'][$cart_index]) &&
+        isset($_SESSION['cart'][$cart_index]['type']) &&
+        $_SESSION['cart'][$cart_index]['type'] === 'menu'
+    ) {
+        unset($_SESSION['cart'][$cart_index]);
+        $_SESSION['cart'] = array_values($_SESSION['cart']); // Fix indexes
     }
+
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
+
+// Fetch menu items
+$sql = "
+    SELECT item_id, item_name, item_type, price, image_url
+    FROM Menu_Items
+    WHERE availability = 'available'
+";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Alien Cafe - Menu</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-
-    <!-- External CSS for menu page -->
+    <title>Alien Café | Main Menu</title>
     <link rel="stylesheet" href="css/menu.css">
-
-    <!-- Main JS (fetch calls) -->
-    <script src="js/main.js" defer></script>
 </head>
+
 <body>
 
-    <!-- Top Navigation Menu -->
-    <nav>
-        <a href="home.php">Home</a>
-        <a href="menu.php">Menu</a>
-        <a href="merchandise.php">Merchandise</a>
-        <a href="payment.php">Payment</a>
-        <a href="reservation.php">Reservation</a>
-        <a href="logout.php">Logout</a>
-    </nav>
+<div class="nav">
+    <a href="home.php">Home</a>
+    <a href="menu.php">Main Menu</a>
+    <a href="merchandise.php">Merchandise</a>
+    <a href="payment.php">Payment</a>
+    <a href="reservation.php">Reservation</a>
+    <a href="reviews.php">Reviews</a>
+    <a href="logout.php">Logout</a>
+</div>
 
-    <div class="container">
-        <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+<div class="page-wrapper">
+    <h1 class="page-title">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+    <h2 class="page-subtitle">Intergalactic Menu</h2>
 
-        <h2>Available Menu Items (loaded with fetch)</h2>
-        <!-- JS will fill this with HTML from get_menu_items.php -->
-        <div class="menu-grid">
-            <p>Loading menu items...</p>
+    <div class="main-content">
+
+        <!-- LEFT SIDE — MENU ITEMS -->
+        <div class="menu-container">
+            <div class="menu-grid">
+                <?php if ($result && $result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <div class="menu-item">
+                            <img src="images/<?php echo htmlspecialchars($row['image_url']); ?>"
+                                 alt="<?php echo htmlspecialchars($row['item_name']); ?>">
+
+                            <h3><?php echo htmlspecialchars($row['item_name']); ?></h3>
+                            <p class="type">Type: <?php echo htmlspecialchars($row['item_type']); ?></p>
+                            <p class="price">€<?php echo number_format($row['price'], 2); ?></p>
+
+                            <form action="" method="POST">
+                                <input type="hidden" name="item_id" value="<?php echo $row['item_id']; ?>">
+                                <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($row['item_name']); ?>">
+                                <input type="hidden" name="item_price" value="<?php echo $row['price']; ?>">
+                                <button type="submit" name="add_to_cart" class="add-to-cart-btn">Add to Cart</button>
+                            </form>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>No menu items available.</p>
+                <?php endif; ?>
+            </div>
         </div>
 
-        <h2>Your Cart</h2>
-        <ul class="cart-list">
-            <?php
-            $total = 0;
-            if (!empty($_SESSION['cart'])) {
-                foreach ($_SESSION['cart'] as $item) {
-                    $total += $item['price'];
-                    ?>
-                    <li>
-                        <?php echo htmlspecialchars($item['name']); ?>
-                        - €<?php echo number_format($item['price'], 2); ?>
-                        <form action="" method="POST" class="inline-form">
-                            <input type="hidden" name="item_name_to_remove"
-                                   value="<?php echo htmlspecialchars($item['name']); ?>">
-                            <button type="submit" name="remove_from_cart" class="remove-btn">Remove</button>
-                        </form>
-                    </li>
-                    <?php
-                }
-                ?>
-                <li class="cart-total">
-                    <strong>Total: €<?php echo number_format($total, 2); ?></strong>
-                </li>
+        <!-- RIGHT SIDE — CART -->
+        <div class="cart-container">
+            <h2>Your Cart</h2>
+            <ul>
                 <?php
-            } else {
-                echo "<li>Your cart is empty.</li>";
-            }
-            ?>
-        </ul>
+                // Group repeated menu items
+                $grouped = [];
+                $total = 0;
 
-        <!-- AJAX Cart Summary (JSON + HTML) -->
-        <h2>Cart Summary (AJAX)</h2>
-        <button id="refreshCartBtn" class="add-to-cart-btn">Refresh Cart Summary (AJAX)</button>
-        <div id="cart-summary-ajax" style="margin-top: 15px;">
-            <p>Click the button above to load cart summary using fetch().</p>
+                foreach ($_SESSION['cart'] as $index => $item) {
+
+                    // Show ONLY menu items
+                    if (!isset($item['type']) || $item['type'] !== 'menu') {
+                        continue;
+                    }
+
+                    $id = $item['id'];
+
+                    if (!isset($grouped[$id])) {
+                        $grouped[$id] = [
+                            'name'     => $item['name'],
+                            'price'    => $item['price'],
+                            'quantity' => 1,
+                            'indexes'  => [$index]
+                        ];
+                    } else {
+                        $grouped[$id]['quantity']++;
+                        $grouped[$id]['indexes'][] = $index;
+                    }
+                }
+
+                if (!empty($grouped)):
+                    foreach ($grouped as $id => $data):
+                        $line_total = $data['price'] * $data['quantity'];
+                        $total += $line_total;
+                ?>
+                        <li>
+                            <?php echo htmlspecialchars($data['name']); ?>
+                            (x<?php echo $data['quantity']; ?>)
+                            – €<?php echo number_format($line_total, 2); ?>
+
+                            <form action="" method="POST" style="display:inline;">
+                                <input type="hidden" name="cart_index" value="<?php echo $data['indexes'][0]; ?>">
+                                <button type="submit" name="remove_from_cart" class="remove-btn">Remove</button>
+                            </form>
+                        </li>
+                <?php endforeach; ?>
+
+                    <li class="cart-total-line">
+                        <strong>Total: €<?php echo number_format($total, 2); ?></strong>
+                    </li>
+
+                <?php else: ?>
+                    <li>Your cart is empty.</li>
+                <?php endif; ?>
+            </ul>
         </div>
+
     </div>
+</div>
+
 </body>
 </html>
-

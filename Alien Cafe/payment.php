@@ -108,6 +108,7 @@ if (isset($_POST['pay_now'])) {
         <a href="merchandise.php">Merchandise</a>
         <a href="payment.php">Payment</a>
         <a href="reservation.php">Reservation</a>
+        <a href="reviews.php">Reviews</a>  
         <a href="logout.php">Logout</a>
     </div>
 

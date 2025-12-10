@@ -2,14 +2,15 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: url('../images/AlienGif.gif') no-repeat center center fixed;
-    background-size: contain;
+    background: url('../images/LogIn.png') no-repeat center center fixed;
+    background-size: cover;
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    width: 100%;
 }
 
 .login-container {

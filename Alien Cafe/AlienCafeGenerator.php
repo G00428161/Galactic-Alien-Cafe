@@ -11,7 +11,7 @@
 //include 'db_connect.php';
 
 // Connect to MySQL server
-$conn = new mysqli("zainproject", "root", "",NULL, 3306);
+$conn = new mysqli("zainproject", "root", "",NULL, 3304);
 
 $dbname = "alien_cafe_db";
 
