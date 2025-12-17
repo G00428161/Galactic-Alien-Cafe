@@ -1,0 +1,105 @@
+/* Background */
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/GreenBG.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+/* Navigation */
+nav {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 0 15px #00ffcc;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 15px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+nav a:hover {
+    color: #00ffcc;
+}
+
+/* Main container */
+.container {
+    width: 550px;
+    margin: 60px auto;
+    padding: 35px 40px; /* ⬅️ Increased padding for spacing */
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+
+/* Title */
+.container h1 {
+    text-align: center;
+    font-size: 32px;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+/* Inputs */
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+textarea {
+    height: 90px;
+}
+
+/* Button */
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    background: #ff00e6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover {
+    background: #ff4ff7;
+}
+
+/* Messages */
+.message {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.message.error {
+    background: rgba(255, 0, 0, 0.8);
+}
+
+.message.success {
+    background: rgba(0, 255, 0, 0.7);
+}
