@@ -1,6 +1,6 @@
 # Galactic Alien Café – Dynamic Web Development Project
 
-This project was developed as part of my BSc (Hons) Computing & Digital Media degree.
+This project was developed as part of the Dynamic Web Development module within my BSc (Hons) Computing & Digital Media degree.
 
 ## Project Overview
 Galactic Alien Café is a dynamic website built using PHP and MySQL, developed in a local environment using WAMPServer. The project focuses on responsive design, database interaction, and user-friendly UI/UX.
